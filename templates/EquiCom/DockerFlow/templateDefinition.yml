@@ -1,5 +1,5 @@
 resources:
-  - name: {{ .Values.myRepo.myRepoName }}_git
+  - name: {{ .Values.myRepo.myRepoName }}Git
     type: GitRepo
     configuration:
       gitProvider: avinci_github
@@ -7,7 +7,7 @@ resources:
       branches:
         include: master
 
-  - name: {{ .Values.myRepo.myRepoName }}_img
+  - name: {{ .Values.myRepo.myRepoName }}Img
     type: Image
     configuration:
       registry: bsArt
@@ -16,15 +16,15 @@ resources:
       imageTag: latest
       autoPull: true
 
-  - name: {{ .Values.myRepo.myRepoName }}_dev_build_info
+  - name: {{ .Values.myRepo.myRepoName }}DevBuildInfo
     type: BuildInfo
     configuration:
       sourceArtifactory: bsArt
 
 pipelines:
-  - name: {{ .Values.myRepo.myRepoName }}_pipeline
+  - name: {{ .Values.myRepo.myRepoName }}Pipeline
     steps:
-      - name: {{ .Values.myRepo.myRepoName }}_build
+      - name: {{ .Values.myRepo.myRepoName }}Build
         type: DockerBuild
         configuration:
           nodePool: aws_u20
@@ -34,11 +34,11 @@ pipelines:
           dockerImageName: platform.jfrog-pipelines.com/docker-dev-local/{{ .Values.myRepo.myRepoName }}_app
           dockerImageTag: ${run_number}
           inputResources:
-            - name: {{ .Values.myRepo.myRepoName }}_git
+            - name: {{ .Values.myRepo.myRepoName }}Git
           integrations:
               - name: bsArt
 
-        - name: {{ .Values.myRepo.myRepoName }}_push
+        - name: {{ .Values.myRepo.myRepoName }}Push
           type: DockerPush
           configuration:
             nodePool: aws_u20
@@ -47,25 +47,25 @@ pipelines:
             integrations:
               - name: bsArt
             inputSteps:
-              - name: {{ .Values.myRepo.myRepoName }}_build
+              - name: {{ .Values.myRepo.myRepoName }}Build
             outputResources:
-              - name: {{ .Values.myRepo.myRepoName }}_img
+              - name: {{ .Values.myRepo.myRepoName }}Img
 
-        - name: {{ .Values.myRepo.myRepoName }}_test
+        - name: {{ .Values.myRepo.myRepoName }}Test
           type: Bash
           configuration:
             nodePool: aws_u20
             inputResources:
-              - name: {{ .Values.myRepo.myRepoName }}_img
+              - name: {{ .Values.myRepo.myRepoName }}Img
           execution:
             onExecute:
               - echo "run some test automation platform here"
 
-        - name: {{ .Values.myRepo.myRepoName }}_publish_build
+        - name: {{ .Values.myRepo.myRepoName }}PublishBuild
           type: PublishBuildInfo
           configuration:
             nodePool: aws_u20
             inputSteps:
-              - name: {{ .Values.myRepo.myRepoName }}_test
+              - name: {{ .Values.myRepo.myRepoName }}Test
             outputResources:
-              - name: {{ .Values.myRepo.myRepoName }}_dev_build_info
+              - name: {{ .Values.myRepo.myRepoName }}DevBuildInfo

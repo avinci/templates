@@ -38,34 +38,34 @@ pipelines:
           integrations:
               - name: bsArt
 
-        - name: {{ .Values.myRepo.myRepoName }}Push
-          type: DockerPush
-          configuration:
-            nodePool: aws_u20
-            affinityGroup: docker_group
-            targetRepository: docker-dev-local
-            integrations:
-              - name: bsArt
-            inputSteps:
-              - name: {{ .Values.myRepo.myRepoName }}Build
-            outputResources:
-              - name: {{ .Values.myRepo.myRepoName }}Img
+      - name: {{ .Values.myRepo.myRepoName }}Push
+        type: DockerPush
+        configuration:
+          nodePool: aws_u20
+          affinityGroup: docker_group
+          targetRepository: docker-dev-local
+          integrations:
+            - name: bsArt
+          inputSteps:
+            - name: {{ .Values.myRepo.myRepoName }}Build
+          outputResources:
+            - name: {{ .Values.myRepo.myRepoName }}Img
 
-        - name: {{ .Values.myRepo.myRepoName }}Test
-          type: Bash
-          configuration:
-            nodePool: aws_u20
-            inputResources:
-              - name: {{ .Values.myRepo.myRepoName }}Img
-          execution:
-            onExecute:
-              - echo "run some test automation platform here"
+      - name: {{ .Values.myRepo.myRepoName }}Test
+        type: Bash
+        configuration:
+          nodePool: aws_u20
+          inputResources:
+            - name: {{ .Values.myRepo.myRepoName }}Img
+        execution:
+          onExecute:
+            - echo "run some test automation platform here"
 
-        - name: {{ .Values.myRepo.myRepoName }}PublishBuild
-          type: PublishBuildInfo
-          configuration:
-            nodePool: aws_u20
-            inputSteps:
-              - name: {{ .Values.myRepo.myRepoName }}Test
-            outputResources:
-              - name: {{ .Values.myRepo.myRepoName }}DevBuildInfo
+      - name: {{ .Values.myRepo.myRepoName }}PublishBuild
+        type: PublishBuildInfo
+        configuration:
+          nodePool: aws_u20
+          inputSteps:
+            - name: {{ .Values.myRepo.myRepoName }}Test
+          outputResources:
+            - name: {{ .Values.myRepo.myRepoName }}DevBuildInfo

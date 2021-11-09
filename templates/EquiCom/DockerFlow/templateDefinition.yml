@@ -1,5 +1,5 @@
 resources:
-  - name: {{ .Values.myRepo.myRepoName }}Git
+  - name: {{ .Values.myRepo.gitRepoName }}Git
     type: GitRepo
     configuration:
       gitProvider: avinci_github
@@ -7,7 +7,7 @@ resources:
       branches:
         include: master
 
-  - name: {{ .Values.myRepo.myRepoName }}Img
+  - name: {{ .Values.myRepo.gitRepoName }}Img
     type: Image
     configuration:
       registry: bsArt
